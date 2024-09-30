@@ -2,9 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CreateOrderService {
-  public execute(orderData: any): string {
+  public createOrder(orderData: any): string {
     this.validateOrder(orderData);
-    
+
     return 'OK';
   }
 

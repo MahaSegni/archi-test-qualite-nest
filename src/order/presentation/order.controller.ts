@@ -13,6 +13,6 @@ export default class OrderController {
 
   @Post('/create')
   async createOrder(@Body() body: any): Promise<string> {
-    return this.createOrderService.execute(body);
+    return this.createOrderService.createOrder(body);
   }
 }
