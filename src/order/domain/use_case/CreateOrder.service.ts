@@ -2,13 +2,17 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CreateOrderService {
+  private static readonly MIN_ORDER_AMOUNT = 10;
+  private static readonly MAX_ORDER_ITEMS = 5;
+
   public createOrder(orderData: any): string {
-    this.validateOrder(orderData);
+    this.validateOrderData(orderData);
+    this.validateOrderTotal(orderData.orderItems);
 
     return 'OK';
   }
 
-  private validateOrder(orderData: any): void {
+  private validateOrderData(orderData: any): void {
     const { customerName, shippingAddress, invoiceAddress, orderItems } = orderData;
 
     if (!customerName) {
@@ -19,18 +23,16 @@ export class CreateOrderService {
       throw new BadRequestException('Les adresses de livraison et de facturation sont requises');
     }
 
-    if (!orderItems || orderItems.length === 0) {
-      throw new BadRequestException('Au moins 1 article');
+    if (!orderItems || orderItems.length === 0 || orderItems.length > CreateOrderService.MAX_ORDER_ITEMS) {
+      throw new BadRequestException(`La commande doit contenir entre 1 et ${CreateOrderService.MAX_ORDER_ITEMS} articles`);
     }
+  }
 
-    if (orderItems.length > 5) {
-      throw new BadRequestException('Impossible une commande > 5 articles');
-    }
+  private validateOrderTotal(orderItems: any[]): void {
+    const totalAmount = orderItems.reduce((sum, item) => sum + item.price, 0);
 
-    const totalAmount = orderItems.reduce((sum: number, item: any) => sum + item.price, 0);
-
-    if (totalAmount < 10) {
-      throw new BadRequestException('Le montant total > 10€');
+    if (totalAmount < CreateOrderService.MIN_ORDER_AMOUNT) {
+      throw new BadRequestException(`Le montant total doit être supérieur à ${CreateOrderService.MIN_ORDER_AMOUNT}€`);
     }
   }
 }
