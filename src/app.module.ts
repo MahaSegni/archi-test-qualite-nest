@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './order/order.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import OrderController from './order/presentation/order.controller';
+import { CreateOrderService } from './order/domain/use_case/CreateOrder.service';
 
 @Module({
   imports: [
@@ -27,3 +29,4 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
   providers: [AppService],
 })
 export class AppModule {}
+
