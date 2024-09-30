@@ -24,7 +24,7 @@ export class CreateOrderService {
     }
 
     if (!orderItems || orderItems.length === 0 || orderItems.length > CreateOrderService.MAX_ORDER_ITEMS) {
-      throw new BadRequestException(`La commande doit contenir entre 1 et ${CreateOrderService.MAX_ORDER_ITEMS} articles`);
+      throw new BadRequestException(`La commande doit contenir entre [ 1 et ${CreateOrderService.MAX_ORDER_ITEMS} ] articles`);
     }
   }
 
@@ -32,7 +32,7 @@ export class CreateOrderService {
     const totalAmount = orderItems.reduce((sum, item) => sum + item.price, 0);
 
     if (totalAmount < CreateOrderService.MIN_ORDER_AMOUNT) {
-      throw new BadRequestException(`Le montant total doit être supérieur à ${CreateOrderService.MIN_ORDER_AMOUNT}€`);
+      throw new BadRequestException(`Le montant total > ${CreateOrderService.MIN_ORDER_AMOUNT}€`);
     }
   }
 }
