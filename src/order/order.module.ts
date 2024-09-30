@@ -5,12 +5,14 @@ import OrderController from './presentation/order.controller';
 import { Order } from './domain/entity/order.entity';
 import { OrderItem } from './domain/entity/order-item.entity';
 import { CreateOrderService } from './domain/use_case/CreateOrder.service';
+import { PayOrderService } from './domain/use_case/PayOrder.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem])],
   controllers: [OrderController],
   providers: [
-    CreateOrderService, 
+    CreateOrderService,
+    PayOrderService,
     {
       provide: 'OrderRepositoryInterface',
       useClass: OrderRepository,
