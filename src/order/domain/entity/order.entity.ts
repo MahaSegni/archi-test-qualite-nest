@@ -7,12 +7,14 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Expose } from 'class-transformer';
+
 export enum OrderStatus {
-PENDING = 'PENDING',
-PAID  = 'PAID',
-CANCELLED = 'CANCELLED',
-SHIPPED = 'SHIPPED',
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  CANCELLED = 'CANCELLED',
+  SHIPPED = 'SHIPPED',
 }
+
 @Entity()
 export class Order {
   @CreateDateColumn()
@@ -56,7 +58,16 @@ export class Order {
   @Column({ nullable: true })
   @Expose({ groups: ['group_orders'] })
   paidAt: Date | null;
+
   pay(): void {
+    if (this.status !== OrderStatus.PENDING) {
+      throw new Error('Order can only be paid if it is pending.');
+    }
+
+    if (this.price > 500) {
+      throw new Error('Total amount exceeds the limit of 500 euros.');
+    }
+
     this.status = OrderStatus.PAID;
     this.paidAt = new Date();
   }
