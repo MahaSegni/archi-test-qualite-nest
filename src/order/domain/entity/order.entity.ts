@@ -7,7 +7,12 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Expose } from 'class-transformer';
-
+export enum OrderStatus {
+PENDING = 'PENDING',
+PAID  = 'PAID',
+CANCELLED = 'CANCELLED',
+SHIPPED = 'SHIPPED',
+}
 @Entity()
 export class Order {
   @CreateDateColumn()
@@ -51,4 +56,8 @@ export class Order {
   @Column({ nullable: true })
   @Expose({ groups: ['group_orders'] })
   paidAt: Date | null;
+  pay(): void {
+    this.status = OrderStatus.PAID;
+    this.paidAt = new Date();
+  }
 }

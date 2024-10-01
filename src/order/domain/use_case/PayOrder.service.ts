@@ -37,9 +37,7 @@ export class PayOrderService {
       throw new BadRequestException('Already been paid');
     }
 
-    order.paidAt = new Date();
-    order.status = 'Paid';
-
+    order.pay();
     return order;
   }
 }
