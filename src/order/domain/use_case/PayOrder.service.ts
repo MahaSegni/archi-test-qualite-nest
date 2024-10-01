@@ -51,6 +51,7 @@ export class PayOrderService {
     try {
         order.pay();
       } catch (error) {
+        
         throw new BadRequestException(`Payment failed: ${error.message}`);
       }
    
