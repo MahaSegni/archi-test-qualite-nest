@@ -65,13 +65,24 @@ export class Order {
 
   @Column()
   @Expose({ groups: ['group_orders'] })
-  private status: string;
+  status: string;
 
   @Column({ nullable: true })
   @Expose({ groups: ['group_orders'] })
   private paidAt: Date | null;
 
-  constructor(createOrderCommand: CreateOrderCommand) {
+  @Column({ nullable: true })
+  @Expose({ groups: ['group_orders'] })
+  cancelAt: Date | null;
+
+  @Column({ nullable: true })
+  @Expose({ groups: ['group_orders'] })
+  canceledReason: string | null;
+
+  constructor(createOrderCommand?: CreateOrderCommand) {
+    if (!createOrderCommand) {
+      return;
+    }
     const { items, customerName, shippingAddress, invoiceAddress } = createOrderCommand;
 
     if (!customerName || !items || items.length === 0 || !shippingAddress || !invoiceAddress) {
@@ -138,5 +149,13 @@ export class Order {
     this.shippingAddressSetAt = new Date();
     this.shippingAddress = customerAddress;
     this.price += Order.SHIPPING_COST;
+  }
+
+  setInvoiceAddress(invoiceAddress?: string): void {
+    if (!this.shippingAddress) {
+      throw new BadRequestException('Shipping address must be set before setting the invoice address');
+    }
+
+    this.invoiceAddress = invoiceAddress || this.shippingAddress;
   }
 }

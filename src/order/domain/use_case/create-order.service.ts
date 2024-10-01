@@ -1,5 +1,6 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
 import { Order } from 'src/order/domain/entity/order.entity';
+import OrderRepository from 'src/order/infrastructure/order.repository';
 
 export interface ItemDetailCommand {
   productName: string;
@@ -13,11 +14,16 @@ export interface CreateOrderCommand {
   invoiceAddress: string;
 }
 
-export class CreateOrderService {
-  createOrder(createOrderCommand: CreateOrderCommand): string {
-    const order = new Order(createOrderCommand); 
 
-    return 'Montant de la commande: ' + order.price;
+export class CreateOrderService {
+
+  constructor (@Inject('OrderRepository') private readonly orderRepository: OrderRepository){}
+  createOrder(createOrderCommand: CreateOrderCommand): string {
+   
+    const order = new Order(createOrderCommand); 
+    this.orderRepository.save(order);
+
+    return 'Montant de la commande: '+ order.price;
 
   }
 }
