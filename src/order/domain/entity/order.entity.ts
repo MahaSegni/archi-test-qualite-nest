@@ -17,6 +17,16 @@ export enum OrderStatus {
 
 @Entity()
 export class Order {
+  static MAX_ITEMS = 5;
+ 
+  static AMOUNT_MINIMUM = 5;
+ 
+  static AMOUNT_MAXIMUM = 500;
+
+  static DELIVERY_PRICE = 5;
+
+  static MIN_ITEMS_DELIVERY = 3;
+
   @CreateDateColumn()
   @Expose({ groups: ['group_orders'] })
   createdAt: Date;
@@ -64,11 +74,26 @@ export class Order {
       throw new Error('Order not pending');
     }
 
-    if (this.price > 500) {
+    if (this.price > Order.AMOUNT_MAXIMUM) {
       throw new Error('Total amount > 500 euros');
     }
 
     this.status = OrderStatus.PAID;
     this.paidAt = new Date();
   }
+  addDelivery(newAddress : string): void {
+    if (this.orderItems.length <= Order.MIN_ITEMS_DELIVERY) {
+      throw new Error('Delivery if > 3 items');
+    }
+
+    if (this.status !== OrderStatus.PENDING && !this.shippingAddressSetAt) {
+      throw new Error('Delivery can only be added if the order is already paid');
+    }
+    this.shippingAddress = newAddress;
+
+    
+      this.price += Order.DELIVERY_PRICE;
+      this.shippingAddressSetAt = new Date();
+
+}
 }
