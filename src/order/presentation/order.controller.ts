@@ -17,8 +17,8 @@ export default class OrderController {
     return this.createOrderService.createOrder(body);
   }
 
-  
-  @Patch(':orderId/pay')
+
+  @Post(':orderId/pay')
   async payOrder(@Param('orderId') orderId: string) {
     return this.payOrderService.payOrder(orderId);
   }
