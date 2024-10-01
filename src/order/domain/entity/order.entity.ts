@@ -7,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Expose } from 'class-transformer';
+import { CreateOrderCommand, ItemDetailCommand } from '../use_case/create-order.service';
+import { BadRequestException } from '@nestjs/common';
 
 export enum OrderStatus {
   PENDING = 'PENDING',
@@ -68,6 +70,44 @@ export class Order {
   @Column({ nullable: true })
   @Expose({ groups: ['group_orders'] })
   private paidAt: Date | null;
+
+  constructor(createOrderCommand: CreateOrderCommand) {
+    const { items, customerName, shippingAddress, invoiceAddress } = createOrderCommand;
+
+    if (!customerName || !items || items.length === 0 || !shippingAddress || !invoiceAddress) {
+      throw new BadRequestException('Missing required fields');
+    }
+
+    if (items.length > Order.MAX_ITEMS) {
+      throw new BadRequestException('Cannot create order with more than 5 items');
+    }
+
+    const totalAmount = this.calculateOrderAmount(items);
+
+    this.customerName = customerName;
+    this.orderItems = items.map(item => {
+      const orderItem = new OrderItem();
+      orderItem.price = item.price; 
+      return orderItem;
+    });
+    this.shippingAddress = shippingAddress;
+    this.invoiceAddress = invoiceAddress;
+    this.price = totalAmount;
+    this.status = OrderStatus.PENDING; 
+    this.createdAt = new Date();
+  }
+
+  private calculateOrderAmount(items: ItemDetailCommand[]): number {
+    const totalAmount = items.reduce((sum, item) => sum + item.price, 0);
+
+    if (totalAmount < Order.AMOUNT_MINIMUM) {
+      throw new BadRequestException(
+        `Cannot create order with total amount less than ${Order.AMOUNT_MINIMUM}€`,
+      );
+    }
+
+    return totalAmount;
+  }
 
   pay(): void {
     if (this.status !== OrderStatus.PENDING) {
