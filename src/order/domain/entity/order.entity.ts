@@ -61,11 +61,11 @@ export class Order {
 
   pay(): void {
     if (this.status !== OrderStatus.PENDING) {
-      throw new Error('Order can only be paid if it is pending.');
+      throw new Error('Order not pending');
     }
 
     if (this.price > 500) {
-      throw new Error('Total amount exceeds the limit of 500 euros.');
+      throw new Error('Total amount > 500 euros');
     }
 
     this.status = OrderStatus.PAID;
