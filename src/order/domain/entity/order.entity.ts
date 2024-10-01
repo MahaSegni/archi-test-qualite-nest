@@ -10,22 +10,22 @@ import { Expose } from 'class-transformer';
 
 export enum OrderStatus {
   PENDING = 'PENDING',
+  SHIPPING_ADDRESS_SET = 'SHIPPING_ADDRESS_SET',
   PAID = 'PAID',
-  CANCELLED = 'CANCELLED',
   SHIPPED = 'SHIPPED',
+  DELIVERED = 'DELIVERED',
+  CANCELED = 'CANCELED',
 }
 
 @Entity()
 export class Order {
   static MAX_ITEMS = 5;
- 
+
   static AMOUNT_MINIMUM = 5;
- 
+
   static AMOUNT_MAXIMUM = 500;
 
-  static DELIVERY_PRICE = 5;
-
-  static MIN_ITEMS_DELIVERY = 3;
+  static SHIPPING_COST = 5;
 
   @CreateDateColumn()
   @Expose({ groups: ['group_orders'] })
@@ -63,37 +63,40 @@ export class Order {
 
   @Column()
   @Expose({ groups: ['group_orders'] })
-  status: string;
+  private status: string;
 
   @Column({ nullable: true })
   @Expose({ groups: ['group_orders'] })
-  paidAt: Date | null;
+  private paidAt: Date | null;
 
   pay(): void {
     if (this.status !== OrderStatus.PENDING) {
-      throw new Error('Order not pending');
+      throw new Error('Commande déjà payée');
     }
 
     if (this.price > Order.AMOUNT_MAXIMUM) {
-      throw new Error('Total amount > 500 euros');
+      throw new Error('Montant maximum dépassé');
     }
 
     this.status = OrderStatus.PAID;
     this.paidAt = new Date();
   }
-  addDelivery(newAddress : string): void {
-    if (this.orderItems.length <= Order.MIN_ITEMS_DELIVERY) {
-      throw new Error('Delivery if > 3 items');
+
+  setShippingAddress(customerAddress: string): void {
+    if (
+      this.status !== OrderStatus.PENDING &&
+      this.status !== OrderStatus.SHIPPING_ADDRESS_SET
+    ) {
+      throw new Error('Commande non payée');
     }
 
-    if (this.status !== OrderStatus.PENDING && !this.shippingAddressSetAt) {
-      throw new Error('Delivery can only be added if the order is already paid');
+    if (this.orderItems.length < Order.MAX_ITEMS) {
+      throw new Error('Trop d’articles');
     }
-    this.shippingAddress = newAddress;
 
-    
-      this.price += Order.DELIVERY_PRICE;
-      this.shippingAddressSetAt = new Date();
-
-}
+    this.status = OrderStatus.SHIPPING_ADDRESS_SET;
+    this.shippingAddressSetAt = new Date();
+    this.shippingAddress = customerAddress;
+    this.price += Order.SHIPPING_COST;
+  }
 }

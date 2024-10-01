@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { OrderModule } from './order/order.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import OrderController from './order/presentation/order.controller';
-import { CreateOrderService } from './order/domain/use_case/CreateOrder.service';
+import { CreateOrderService } from './order/domain/use_case/create-order.service';
 
 @Module({
   imports: [
