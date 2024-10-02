@@ -4,7 +4,6 @@ import { PayOrderService } from '../domain/use_case/pay-order.service';
 import { CancelOrderService } from '../domain/use_case/cancel-order.service';
 import { CreateOrderService } from '../domain/use_case/create-order.service';
 import { SetInvoiceAddressOrderService } from '../domain/use_case/set-invoice-address.service';
-import { OrderManagerService } from '../crado/order-manager.service';
 
 @Controller('/orders')
 export default class OrderController {
@@ -13,7 +12,6 @@ export default class OrderController {
     private readonly payOrderService: PayOrderService,
     private readonly setInvoiceAddressService: SetInvoiceAddressOrderService,
     private readonly cancelOrderService: CancelOrderService,
-    private readonly orderManagerService: OrderManagerService
   ) {}
 
   @Post()
