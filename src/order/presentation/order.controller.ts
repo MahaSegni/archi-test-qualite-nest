@@ -21,7 +21,7 @@ export default class OrderController {
     return this.createOrderService.execute(createOrderCommand);
   }
 
-  @Post()
+  @Post('/:id')
   async payOrder(@Param('id') id: string): Promise<Order> {
     return await this.payOrderService.execute(id);
   }
