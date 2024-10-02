@@ -1,20 +1,22 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { Order } from '../entity/order.entity';
+import { NotFoundException } from '@nestjs/common';
+import { Order } from 'src/order/domain/entity/order.entity';
 import OrderRepository from 'src/order/infrastructure/order.repository';
 
-export class SetInvoiceAddressService {
+export class SetInvoiceAddressOrderService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
-  async execute(orderId: string, invoiceAddress: string | null): Promise<Order> {
+  public async execute(
+    orderId: string,
+    invoiceAddress: string,
+  ): Promise<Order> {
     const order = await this.orderRepository.findById(orderId);
 
-    if (!order.shippingAddress) {
-      throw new BadRequestException('Shipping address must be set before invoice address.');
+    if (!order) {
+      throw new NotFoundException('Pas de commande');
     }
 
-    order.invoiceAddress = invoiceAddress || order.shippingAddress;
+    order.setInvoiceAddress(invoiceAddress);
 
-    await this.orderRepository.save(order);
-    return order;
+    return this.orderRepository.save(order);
   }
 }
