@@ -1,4 +1,5 @@
 import { Order } from 'src/order/domain/entity/order.entity';
+import { Twilio } from 'twilio';
 
 export class TextMessageSenderService {
   constructor(private readonly twilio: Twilio) {}

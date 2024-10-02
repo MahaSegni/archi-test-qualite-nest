@@ -16,7 +16,7 @@ export class OrderManagerService {
     private readonly textMessageSender: TextMessageSenderService,
   ) {}
 
-  async processOrder(orderId: number): Promise<void> {
+  async processOrder(orderId: string): Promise<void> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId },
     });
