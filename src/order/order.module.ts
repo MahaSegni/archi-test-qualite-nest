@@ -9,7 +9,6 @@ import { SetShippingAddressOrderService } from './domain/use_case/set-shipping-a
 import { CancelOrderService } from './domain/use_case/cancel-order.service';
 import { SetInvoiceAddressOrderService } from './domain/use_case/set-invoice-address.service';
 import { OrderManagerService } from './crado/order-manager.service';
-import { OrderValidationService } from './crado/order-validation.service';
 import { EmailService } from './crado/email-service';
 import { SmsService } from './crado/sms-service';
 import OrderRepository from './infrastructure/order.repository';
@@ -21,7 +20,6 @@ import OrderRepository from './infrastructure/order.repository';
     PayOrderService,SetShippingAddressOrderService,
     CancelOrderService, SetInvoiceAddressOrderService,
     OrderManagerService,
-    OrderValidationService,
     EmailService,
     SmsService,
     OrderRepository,],

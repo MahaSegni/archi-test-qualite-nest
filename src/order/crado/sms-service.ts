@@ -7,7 +7,7 @@ export class SmsService {
   private client;
 
   constructor() {
-    const accountSid = 'your_twilio_account_sid';
+    const accountSid = 'NH1H5YY72PNN4KAHXM94WMDR';
     const authToken = 'your_twilio_auth_token';
     this.client = twilio(accountSid, authToken);
   }
