@@ -17,8 +17,8 @@ export class OrderManagerService {
         throw new Error('Order validation failed');
       }
    
-   // await this.emailService.sendOrderConfirmation(order);
-   // await this.smsService.sendOrderConfirmation(order);
+    await this.emailService.sendOrderConfirmation(order);
+    await this.smsService.sendOrderConfirmation(order);
 
     await this.orderRepository.save(order);
   }
