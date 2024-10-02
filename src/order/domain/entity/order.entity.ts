@@ -15,6 +15,8 @@ export interface CreateOrderCommand {
   customerName: string;
   shippingAddress: string;
   invoiceAddress: string;
+  customerEmail : string; 
+  customerPhoneNumber : string;
 }
 
 export enum OrderStatus {
@@ -28,6 +30,9 @@ export enum OrderStatus {
 
 @Entity()
 export class Order {
+  isValid(): boolean {
+    return this.status === OrderStatus.PAID;
+  }
   static MAX_ITEMS = 5;
 
   static AMOUNT_MINIMUM = 5;
@@ -86,6 +91,13 @@ export class Order {
   @Expose({ groups: ['group_orders'] })
   private cancelReason: string | null;
 
+  @Column({ nullable: true }) 
+  @Expose({ groups: ['group_orders'] })
+  customerEmail: string;  
+  @Column({ nullable: true }) 
+  @Expose({ groups: ['group_orders'] })
+  customerPhoneNumber: string;
+
   // methode factory : permet de ne pas utiliser le constructor
   // car le constructor est utilisé par typeorm
   // public createOrder(createOrderCommand: CreateOrderCommand): Order {
@@ -120,6 +132,8 @@ export class Order {
     this.customerName = createOrderCommand.customerName;
     this.shippingAddress = createOrderCommand.shippingAddress;
     this.invoiceAddress = createOrderCommand.invoiceAddress;
+    this.customerEmail = createOrderCommand.customerEmail;
+    this.customerPhoneNumber = createOrderCommand.customerPhoneNumber;
     this.status = OrderStatus.PENDING;
     this.price = this.calculateOrderAmount(createOrderCommand.items);
   }
