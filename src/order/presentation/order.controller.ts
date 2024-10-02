@@ -44,9 +44,6 @@ export default class OrderController {
     return this.cancelOrderService.execute(orderId, reason);
   }
 
-  @Post(':id/process')
-  async processOrder(@Param('id') orderId: string): Promise<void> {
-    await this.orderManagerService.processOrder(orderId);
-  }
+
 
 }

@@ -9,9 +9,9 @@ import { SetShippingAddressOrderService } from './domain/use_case/set-shipping-a
 import { CancelOrderService } from './domain/use_case/cancel-order.service';
 import { SetInvoiceAddressOrderService } from './domain/use_case/set-invoice-address.service';
 import { OrderManagerService } from './crado/order-manager.service';
-import { EmailService } from './crado/email-service';
-import { SmsService } from './crado/sms-service';
 import OrderRepository from './infrastructure/order.repository';
+import { EmailSenderService } from './crado/email-sender.service';
+import { TextMessageSenderService } from './crado/text-message-sender.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem])],
@@ -20,8 +20,8 @@ import OrderRepository from './infrastructure/order.repository';
     PayOrderService,SetShippingAddressOrderService,
     CancelOrderService, SetInvoiceAddressOrderService,
     OrderManagerService,
-    EmailService,
-    SmsService,
+    EmailSenderService,
+    TextMessageSenderService,
     OrderRepository,],
 })
 export class OrderModule {}
