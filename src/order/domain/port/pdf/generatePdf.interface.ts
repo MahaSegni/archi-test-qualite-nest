@@ -1,4 +1,4 @@
-import { OrderItem } from "../entity/order-item.entity";
+import { OrderItem } from "../../entity/order-item.entity";
  
  
 export interface generatePdfInterface {

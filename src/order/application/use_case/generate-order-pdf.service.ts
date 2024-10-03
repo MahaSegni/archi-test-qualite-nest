@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OrderRepositoryInterface } from 'src/order/domain/port/order.repository.interface';
-import { PdfGenerator } from '../../infrastructure/pdf-generator';
+import { PdfGenerator } from '../../infrastructure/pdf/pdf-generator';
 
 @Injectable()
 export class GenerateOrderPdfService {

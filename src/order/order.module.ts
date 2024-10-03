@@ -9,10 +9,10 @@ import { PayOrderService } from './application/use_case/pay-order.service';
 import { CancelOrderService } from './application/use_case/cancel-order.service';
 import { SetInvoiceAddressOrderService } from './application/use_case/set-invoice-address.service';
 import { SetShippingAddressOrderService } from './application/use_case/set-shipping-address-order.service';
-import OrderRepositoryTypeOrm from './infrastructure/bdd/order.repository';
-import { PdfGenerator } from './infrastructure/pdf-generator';
+import OrderRepositoryTypeOrm from './infrastructure/persistance/order.repository';
+import { PdfGenerator } from './infrastructure/pdf/pdf-generator';
 import { GenerateOrderPdfService } from './application/use_case/generate-order-pdf.service';
-import { generatePdfInterface } from './domain/port/generatePdf.interface';
+import { generatePdfInterface } from './domain/port/pdf/generatePdf.interface';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem])],

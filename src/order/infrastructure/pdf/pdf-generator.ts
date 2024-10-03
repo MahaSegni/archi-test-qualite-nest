@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PdfDocument } from '@ironsoftware/ironpdf';
 import { promises as fs } from 'fs';
 import { join } from 'path';
+import { generatePdfInterface } from 'src/order/domain/port/pdf/generatePdf.interface';
 
 @Injectable()
-export class PdfGenerator {
+export class PdfGenerator implements generatePdfInterface {
   async generateOrderPdf(orderId: string, orderItems: any[]): Promise<Buffer> {
     const htmlContent = `
       <h1>Commande ID: ${orderId}</h1>
