@@ -9,6 +9,6 @@ npm install
 docker compose up -d
 
 npm run start:dev
-
+npm test
 
 Accès : http://localhost:8000/api/orders
