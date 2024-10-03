@@ -27,12 +27,12 @@ export enum OrderStatus {
   DELIVERED = 'DELIVERED',
   CANCELED = 'CANCELED',
 }
-
 @Entity()
 export class Order {
   isValid(): boolean {
     return this.status === OrderStatus.PAID;
   }
+  
   static MAX_ITEMS = 5;
 
   static AMOUNT_MINIMUM = 5;
@@ -224,7 +224,16 @@ export class Order {
     }
 
     this.status = OrderStatus.CANCELED;
-    this.cancelAt = new Date('NOW');
+    this.cancelAt = new Date();
     this.cancelReason = cancelReason;
+  }
+  getOrderDetailsForPdf() {
+    return {
+      id: this.id,
+      items: this.orderItems.map(item => ({
+        name: item.productName,
+        quantity: item.quantity,
+      })),
+    };
   }
 }

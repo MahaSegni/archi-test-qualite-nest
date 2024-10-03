@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreateOrderCommand, Order } from 'src/order/domain/entity/order.entity';
-import { PayOrderService } from '../domain/use_case/pay-order.service';
-import { CancelOrderService } from '../domain/use_case/cancel-order.service';
-import { CreateOrderService } from '../domain/use_case/create-order.service';
-import { SetInvoiceAddressOrderService } from '../domain/use_case/set-invoice-address.service';
+import { CreateOrderService } from '../../application/use_case/create-order.service';
+import { PayOrderService } from '../../application/use_case/pay-order.service';
+import { SetInvoiceAddressOrderService } from '../../application/use_case/set-invoice-address.service';
+import { CancelOrderService } from '../../application/use_case/cancel-order.service';
 
 @Controller('/orders')
 export default class OrderController {
