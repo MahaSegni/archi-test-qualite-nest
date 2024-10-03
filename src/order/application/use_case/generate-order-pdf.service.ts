@@ -16,7 +16,6 @@ export class GenerateOrderPdfService {
       throw new Error('Order not found');
     }
 
-    // Vérification si la commande a été payée
     if (!order.isValid()) {
       throw new Error('Cannot generate invoice for an unpaid order');
     }
