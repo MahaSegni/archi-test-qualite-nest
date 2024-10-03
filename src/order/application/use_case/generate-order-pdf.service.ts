@@ -16,10 +16,6 @@ export class GenerateOrderPdfService {
       throw new Error('Order not found');
     }
 
-    if (!order.isValid()) {
-      throw new Error('Cannot generate invoice for an unpaid order');
-    }
-
     const orderDetails = order.getOrderDetailsForPdf();
     return await this.pdfGeneratorService.generateOrderPdf(orderDetails.id, orderDetails.items);
   }

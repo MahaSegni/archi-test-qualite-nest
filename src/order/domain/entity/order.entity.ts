@@ -9,6 +9,7 @@ import {
 import { Expose } from 'class-transformer';
 
 import { BadRequestException } from '@nestjs/common';
+import { error } from 'console';
 
 export interface CreateOrderCommand {
   items: ItemDetailCommand[];
@@ -228,6 +229,10 @@ export class Order {
     this.cancelReason = cancelReason;
   }
   getOrderDetailsForPdf() {
+    if (this.status === OrderStatus.PAID || this.status === OrderStatus.SHIPPED || this.status === OrderStatus.DELIVERED) {
+      throw new Error("Order cannot be processed because it is already paid, shipped, or delivered");
+    }
+    
     return {
       id: this.id,
       items: this.orderItems.map(item => ({
