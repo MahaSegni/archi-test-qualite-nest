@@ -4,7 +4,7 @@ import { promises as fs } from 'fs';
 import { join } from 'path';
 
 @Injectable()
-export class PdfGeneratorService {
+export class PdfGenerator {
   async generateOrderPdf(orderId: string, orderItems: any[]): Promise<Buffer> {
     const htmlContent = `
       <h1>Commande ID: ${orderId}</h1>

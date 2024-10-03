@@ -10,8 +10,9 @@ import { CancelOrderService } from './application/use_case/cancel-order.service'
 import { SetInvoiceAddressOrderService } from './application/use_case/set-invoice-address.service';
 import { SetShippingAddressOrderService } from './application/use_case/set-shipping-address-order.service';
 import OrderRepositoryTypeOrm from './infrastructure/bdd/order.repository';
-import { PdfGeneratorService } from './infrastructure/pdf-generator.service';
+import { PdfGenerator } from './infrastructure/pdf-generator';
 import { GenerateOrderPdfService } from './application/use_case/generate-order-pdf.service';
+import { generatePdfInterface } from './domain/port/generatePdf.interface';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, OrderItem])],
@@ -58,14 +59,16 @@ import { GenerateOrderPdfService } from './application/use_case/generate-order-p
       },
       inject: [OrderRepositoryTypeOrm],
     },
-    PdfGeneratorService,
     {
       provide: GenerateOrderPdfService,
-      useFactory: (orderRepository: OrderRepositoryInterface, pdfGeneratorService: PdfGeneratorService) => {
-        return new GenerateOrderPdfService(orderRepository, pdfGeneratorService);
+      useFactory: (
+        orderRepository: OrderRepositoryInterface,
+        pdfGenerator: generatePdfInterface,
+      ) => {
+        return new GenerateOrderPdfService(orderRepository, pdfGenerator);
       },
-      inject: [OrderRepositoryTypeOrm, PdfGeneratorService],
-    }
+      inject: [OrderRepositoryTypeOrm, PdfGenerator],
+    },
   ],
   
 })
