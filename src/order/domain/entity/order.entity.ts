@@ -9,15 +9,12 @@ import {
 import { Expose } from 'class-transformer';
 
 import { BadRequestException } from '@nestjs/common';
-import { error } from 'console';
 
 export interface CreateOrderCommand {
   items: ItemDetailCommand[];
   customerName: string;
   shippingAddress: string;
   invoiceAddress: string;
-  customerEmail : string; 
-  customerPhoneNumber : string;
 }
 
 export enum OrderStatus {
@@ -28,12 +25,9 @@ export enum OrderStatus {
   DELIVERED = 'DELIVERED',
   CANCELED = 'CANCELED',
 }
+
 @Entity()
 export class Order {
-  isValid(): boolean {
-    return this.status === OrderStatus.PAID;
-  }
-  
   static MAX_ITEMS = 5;
 
   static AMOUNT_MINIMUM = 5;
@@ -92,13 +86,6 @@ export class Order {
   @Expose({ groups: ['group_orders'] })
   private cancelReason: string | null;
 
-  @Column({ nullable: true }) 
-  @Expose({ groups: ['group_orders'] })
-  customerEmail: string;  
-  @Column({ nullable: true }) 
-  @Expose({ groups: ['group_orders'] })
-  customerPhoneNumber: string;
-
   // methode factory : permet de ne pas utiliser le constructor
   // car le constructor est utilisé par typeorm
   // public createOrder(createOrderCommand: CreateOrderCommand): Order {
@@ -133,8 +120,6 @@ export class Order {
     this.customerName = createOrderCommand.customerName;
     this.shippingAddress = createOrderCommand.shippingAddress;
     this.invoiceAddress = createOrderCommand.invoiceAddress;
-    this.customerEmail = createOrderCommand.customerEmail;
-    this.customerPhoneNumber = createOrderCommand.customerPhoneNumber;
     this.status = OrderStatus.PENDING;
     this.price = this.calculateOrderAmount(createOrderCommand.items);
   }
@@ -225,20 +210,22 @@ export class Order {
     }
 
     this.status = OrderStatus.CANCELED;
-    this.cancelAt = new Date();
+    this.cancelAt = new Date('NOW');
     this.cancelReason = cancelReason;
   }
-  getOrderDetailsForPdf() {
-    if (this.status === OrderStatus.PAID || this.status === OrderStatus.SHIPPED || this.status === OrderStatus.DELIVERED) {
-      throw new Error("Order cannot be processed because it is already paid, shipped, or delivered");
+
+  getInvoiceInfos(): string {
+    if (
+      this.status !== OrderStatus.PAID &&
+      this.status !== OrderStatus.SHIPPED &&
+      this.status !== OrderStatus.DELIVERED
+    ) {
+      throw new Error('Order is not paid');
     }
-    
-    return {
-      id: this.id,
-      items: this.orderItems.map(item => ({
-        name: item.productName,
-        quantity: item.quantity,
-      })),
-    };
+
+    const itemsNames = this.orderItems
+      .map((item) => item.productName)
+      .join(', ');
+    return `invoice number ${this.id}, with items: ${itemsNames}`;
   }
 }
