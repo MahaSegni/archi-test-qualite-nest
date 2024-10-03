@@ -19,7 +19,7 @@ import { generatePdfInterface } from './domain/port/pdf/generatePdf.interface';
   controllers: [OrderController],
   providers: [
     OrderRepositoryTypeOrm,
-
+    PdfGenerator,
     {
       provide: CreateOrderService,
       useFactory: (orderRepository: OrderRepositoryInterface) => {
